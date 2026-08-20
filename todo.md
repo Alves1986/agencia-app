@@ -9,7 +9,7 @@
 - [x] Implementar central de notificações interativas, leitura e vínculo com as entidades relevantes.
 - [ ] Validar CRUD, persistência, responsividade e caminhos de erro antes da entrega.
 - [x] Clonar e mapear a estrutura, modelos e fluxos existentes no repositório público original.
-- [ ] Configurar a URL da instância FastAPI original para consultar skills e arquivos de produção reais.
+- [x] Configurar a URL da instância FastAPI original para consultar skills e arquivos de produção reais.
 - [x] Adicionar responsáveis reais aos projetos, com seleção, persistência e exibição na lista e no detalhe.
 - [x] Adicionar responsáveis reais às tarefas e aos marcos de produção, com seleção, persistência e exibição.
 - [x] Direcionar notificações para o detalhe específico da entidade vinculada, utilizando tipo e identificador.
@@ -19,3 +19,13 @@
 - [x] Aplicar foco explícito ao detalhe da tarefa ao abrir uma notificação de Produção.
 - [x] Adicionar teste de interface do painel de detalhe da tarefa vinculada.
 - [x] Revalidar testes, tipos e a ausência do erro de conexão após a normalização para `null`.
+- [x] Verificar os contratos públicos do frontend Vercel e do backend FastAPI no Render.
+- [x] Criar e instalar a skill de edição multicâmera baseada no guia fornecido.
+- [x] Conectar e validar a instância FastAPI publicada pelo painel, incluindo skills e arquivos de produção.
+- [x] Produzir documentação técnica e operacional do sistema com capturas atuais da interface.
+- [x] Registrar o procedimento de manutenção, integração e alteração futura de nome/domínio.
+- [x] Validar e registrar, no próprio painel, o carregamento de skills e o estado sem arquivos da instância FastAPI publicada.
+- [x] Cobrir em teste os estados de integração com arquivos ausentes e com arquivos disponíveis para vínculo a um projeto.
+- [x] Registrar evidência da interface em execução mostrando a instância publicada, as skills carregadas e o estado atual do armazenamento.
+- [x] Documentar que a instância atual retorna somente `.gitkeep`, sem artefatos de produção úteis para vínculo.
+- [x] Salvar no projeto um registro verificável da resposta real e da conferência visual da integração publicada.

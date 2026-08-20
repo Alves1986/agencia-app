@@ -1,7 +1,7 @@
 import { createElement, createRef } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
-import { TaskDetail } from "./Production";
+import { IntegrationPanel, TaskDetail } from "./Production";
 
 describe("TaskDetail", () => {
   it("renderiza o detalhe da tarefa vinculada com um alvo de foco acessível", () => {
@@ -24,5 +24,57 @@ describe("TaskDetail", () => {
     expect(markup).toContain("Campanha Aurora");
     expect(markup).toContain('role="dialog"');
     expect(markup).toContain('tabindex="-1"');
+  });
+});
+
+describe("IntegrationPanel", () => {
+  const baseProps = {
+    connectionUrl: "https://agencia-app-backend.onrender.com",
+    setConnectionUrl: vi.fn(),
+    connection: { connectionStatus: "connected" },
+    loading: false,
+    projects: [{ project: { id: 44, name: "Campanha Aurora" } }],
+    projectToAttach: "no-project",
+    setProjectToAttach: vi.fn(),
+    selectedFiles: [],
+    toggleFile: vi.fn(),
+    onConnect: vi.fn(),
+    connecting: false,
+    onAttach: vi.fn(),
+    attaching: false,
+  };
+
+  it("mostra skills carregadas e o estado verificado sem arquivos", () => {
+    const markup = renderToStaticMarkup(
+      createElement(IntegrationPanel, {
+        ...baseProps,
+        integration: {
+          config: { configured: false, provider: null },
+          skills: [{ id: "agencia", name: "Agência de Anúncios (7 Etapas)" }],
+          files: [],
+        },
+      }),
+    );
+
+    expect(markup).toContain("Instância conectada");
+    expect(markup).toContain("Agência de Anúncios (7 Etapas)");
+    expect(markup).toContain("A instância não retornou arquivos em `storage`.");
+  });
+
+  it("oferece um artefato disponível para associação a um projeto", () => {
+    const markup = renderToStaticMarkup(
+      createElement(IntegrationPanel, {
+        ...baseProps,
+        integration: {
+          config: { configured: true, provider: "openai" },
+          skills: [],
+          files: [{ name: "video-final.mp4" }],
+        },
+      }),
+    );
+
+    expect(markup).toContain("video-final.mp4");
+    expect(markup).toContain("Campanha Aurora");
+    expect(markup).toContain("Vincular arquivos selecionados");
   });
 });
