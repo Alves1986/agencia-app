@@ -6,11 +6,16 @@ import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
+import Production from "./pages/Production";
+import Projects from "./pages/Projects";
 
 function Router() {
+  // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
       <Route path="/" component={Home} />
+      <Route path="/projetos" component={Projects} />
+      <Route path="/producao" component={Production} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>

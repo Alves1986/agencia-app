@@ -1,0 +1,21 @@
+# Evolução operacional — Agência
+
+- [x] Verificar a estrutura atual e os pontos de acesso disponíveis para a fonte de dados original.
+- [x] Habilitar a camada de dados persistente e criar os modelos de clientes, equipes, projetos, tarefas, agenda e notificações.
+- [x] Definir uma estratégia de importação ou sincronização para os dados reais do sistema original.
+- [x] Construir a página completa de Projetos com busca, estados, responsáveis, prazos e detalhes.
+- [x] Construir a página completa de Produção com tarefas, prioridades, responsáveis, agenda e atualização de status.
+- [x] Implementar filtros persistentes por equipe e cliente, compartilhados entre as páginas operacionais.
+- [x] Implementar central de notificações interativas, leitura e vínculo com as entidades relevantes.
+- [ ] Validar CRUD, persistência, responsividade e caminhos de erro antes da entrega.
+- [x] Clonar e mapear a estrutura, modelos e fluxos existentes no repositório público original.
+- [ ] Configurar a URL da instância FastAPI original para consultar skills e arquivos de produção reais.
+- [x] Adicionar responsáveis reais aos projetos, com seleção, persistência e exibição na lista e no detalhe.
+- [x] Adicionar responsáveis reais às tarefas e aos marcos de produção, com seleção, persistência e exibição.
+- [x] Direcionar notificações para o detalhe específico da entidade vinculada, utilizando tipo e identificador.
+- [x] Abrir o detalhe da tarefa e aplicar foco com rolagem automática ao navegar por uma notificação de Produção.
+- [x] Cobrir em teste a resolução de notificações e a abertura contextual da tarefa vinculada.
+- [x] Garantir que a consulta da aplicação original retorne um estado nulo válido quando ainda não houver conexão configurada.
+- [x] Aplicar foco explícito ao detalhe da tarefa ao abrir uma notificação de Produção.
+- [x] Adicionar teste de interface do painel de detalhe da tarefa vinculada.
+- [x] Revalidar testes, tipos e a ausência do erro de conexão após a normalização para `null`.
