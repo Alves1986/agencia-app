@@ -37,3 +37,6 @@
 - [x] Criar e manter um projeto real para Globo Acabamentos como referência operacional.
 - [x] Criar e manter uma tarefa real vinculada ao projeto de Globo Acabamentos.
 - [x] Validar criação, leitura e atualização dos registros reais, preservando-os para revisão do usuário.
+- [x] Verificar o remoto GitHub e a autorização de envio da versão atual.
+- [x] Preparar o conjunto de código, documentação e referências para a sincronização com o GitHub.
+- [ ] Enviar a versão atual para o repositório GitHub e confirmar o commit remoto.
