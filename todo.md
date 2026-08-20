@@ -50,4 +50,4 @@
 - [x] Registrar evidência verificável da interface mostrando Anderson no projeto Globo Acabamentos e Patrick na tarefa correspondente.
 - [x] Adicionar teste de interface para Projetos e Produção cobrindo a exibição do responsável após leitura dos dados vinculados.
 - [x] Corrigir a configuração de implantação Vercel para detectar o painel React/Node, e não o backend FastAPI legado.
-- [ ] Validar o build de produção e sincronizar a correção na branch de revisão do GitHub.
+- [x] Validar o build de produção e sincronizar a correção na branch de revisão do GitHub.
