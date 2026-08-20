@@ -79,3 +79,11 @@
 - [x] Registrar evidência funcional rastreável de campanha integrada, geração e revisão humana, ou documentar formalmente um bloqueio por credencial ausente.
 - [x] Confirmar e versionar a evidência da Agência IA com cobertura automatizada, ausência de conexões configuradas e bloqueio explícito de geração real sem credencial autorizada.
 - [x] Sincronizar a documentação de validação da Agência IA no repositório após confirmar sua gravação local.
+- [x] Preparar a logo fornecida como ativo estático da aplicação e referenciá-la por URL de armazenamento.
+- [x] Renomear a interface, o título e os metadados do produto para VERTEX Consulting.
+- [x] Aplicar a logo VERTEX Consulting na navegação e validar sua exibição responsiva sem degradar o painel.
+- [x] Validar testes e build da atualização de identidade VERTEX Consulting.
+- [x] Adicionar teste de interface para o nome e a URL da logo VERTEX Consulting no menu lateral.
+- [x] Confirmar o upload permanente da logo VERTEX Consulting e registrar a URL efetivamente usada pela interface.
+- [x] Validar a assinatura VERTEX Consulting em viewport móvel e registrar a evidência responsiva da navegação.
+- [ ] Sincronizar a atualização de identidade VERTEX Consulting na branch de revisão.

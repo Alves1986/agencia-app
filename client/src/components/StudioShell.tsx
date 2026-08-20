@@ -4,7 +4,11 @@ import { getNotificationTarget } from "@/lib/notificationTarget";
 import React, { ReactNode, useState } from "react";
 import { Link, useLocation } from "wouter";
 
-const pulseMark = "/manus-storage/agencia-pulse-mark_5618a4d0.png";
+export const vertexLogo = "/manus-storage/vertex-consulting-logo_4cdb7d6a.png";
+
+export function VertexBrand() {
+  return <><img src={vertexLogo} alt="Logo VERTEX" /><span><b>VERTEX</b><small>Consulting</small></span></>;
+}
 
 const links = [
   { href: "/", label: "Visão geral", icon: LayoutDashboard },
@@ -42,9 +46,8 @@ export function StudioShell({ title, eyebrow, actions, children }: { title: stri
   return (
     <div className="ops-app">
       <aside className="ops-sidebar" aria-label="Navegação principal">
-        <Link href="/" className="ops-brand" aria-label="Agência — Centro de comando">
-          <img src={pulseMark} alt="" />
-          <span>agência</span>
+        <Link href="/" className="ops-brand ops-brand-vertex" aria-label="VERTEX Consulting — Centro de comando">
+          <VertexBrand />
         </Link>
         <div className="ops-sidebar-caption">Centro de comando</div>
         <nav className="ops-nav">
@@ -62,9 +65,14 @@ export function StudioShell({ title, eyebrow, actions, children }: { title: stri
 
       <main className="ops-main">
         <header className="ops-header">
-          <div>
-            <p className="ops-eyebrow"><i /> {eyebrow}</p>
-            <h1>{title}</h1>
+          <div className="ops-header-title">
+            <Link href="/" className="ops-mobile-brand" aria-label="VERTEX Consulting — Centro de comando">
+              <img src={vertexLogo} alt="Logo VERTEX" />
+            </Link>
+            <div>
+              <p className="ops-eyebrow"><i /> {eyebrow}</p>
+              <h1>{title}</h1>
+            </div>
           </div>
           <div className="ops-header-actions">
             <div className="ops-popover-wrap">
