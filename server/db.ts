@@ -96,6 +96,11 @@ export async function createTeam(userId: number, input: { name: string; color?: 
   });
 }
 
+export async function updateTeam(userId: number, teamId: number, input: { name: string; color: string }) {
+  const db = await requireDb();
+  await db.update(teams).set(input).where(and(eq(teams.id, teamId), eq(teams.createdByUserId, userId)));
+}
+
 export async function listOperators(userId: number) {
   const db = await requireDb();
   return db
@@ -351,6 +356,19 @@ export async function createCalendarEvent(userId: number, input: {
     if (!ownedOperator[0]) throw new Error("Responsável inválido para este espaço de trabalho");
   }
   await db.insert(calendarEvents).values({ ...input, ownerUserId: userId, eventType: input.eventType ?? "meeting" });
+}
+
+export async function updateCalendarEvent(userId: number, eventId: number, input: {
+  title: string;
+  eventType: "meeting" | "review" | "delivery" | "focus" | "deadline";
+  startsAt: Date;
+  endsAt?: Date | null;
+}) {
+  const db = await requireDb();
+  await db
+    .update(calendarEvents)
+    .set(input)
+    .where(and(eq(calendarEvents.id, eventId), eq(calendarEvents.ownerUserId, userId)));
 }
 
 export async function listNotifications(userId: number) {

@@ -1,7 +1,7 @@
 import { createElement, createRef } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
-import { IntegrationPanel, ProductionTaskCard, TaskDetail } from "./Production";
+import { IntegrationPanel, ProductionAgenda, ProductionTaskCard, TaskDetail } from "./Production";
 
 describe("TaskDetail", () => {
   it("renderiza o detalhe da tarefa vinculada com um alvo de foco acessível", () => {
@@ -45,6 +45,23 @@ describe("ProductionTaskCard", () => {
     expect(markup).toContain("Revisar o fluxo inicial do painel");
     expect(markup).toContain("Globo Acabamentos");
     expect(markup).toContain("Patrick");
+  });
+});
+
+describe("ProductionAgenda", () => {
+  it("exibe o marco real Revisão Campanha retornado pela agenda", () => {
+    const markup = renderToStaticMarkup(
+      createElement(ProductionAgenda, {
+        rows: [{
+          event: { id: 1, title: "Revisão Campanha", startsAt: new Date("2026-08-21T02:00:00.000Z") },
+          project: null,
+          responsible: null,
+        }],
+      }),
+    );
+
+    expect(markup).toContain("Revisão Campanha");
+    expect(markup).toContain("Evento da operação");
   });
 });
 

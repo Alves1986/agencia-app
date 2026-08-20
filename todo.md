@@ -32,10 +32,10 @@
 - [x] Cadastrar Globo Acabamentos como cliente real e confirmar sua persistência no painel.
 - [x] Validar criação, consulta e atualização do cliente, projeto e tarefa reais autorizados para Globo Acabamentos.
 - [x] Adiar a exclusão dos registros reais por decisão do usuário para uma revisão conjunta futura.
-- [ ] Validar criação, consulta e atualização de equipe, responsável e marco de agenda com dados reais autorizados.
+- [x] Validar criação, consulta e atualização de equipe e marco de agenda, além da criação, consulta e associação de responsáveis, com dados reais autorizados.
 - [x] Cadastrar Anderson e Patrick como responsáveis reais de Globo Acabamentos.
 - [x] Confirmar no painel a leitura e a atualização dos responsáveis recém-cadastrados.
-- [ ] Obter o nome da equipe e a data/hora do marco de agenda antes de criar esses registros.
+- [x] Obter o nome da equipe e a data/hora do marco de agenda antes de criar esses registros.
 - [x] Implementar a associação protegida de responsável em projetos e tarefas existentes.
 - [x] Vincular Anderson ao projeto e Patrick à tarefa reais de Globo Acabamentos, confirmando a leitura no painel.
 - [x] Testar e documentar os caminhos de erro da interface e dos contratos para URL inválida, backend indisponível, dados inválidos, carregamento e estado vazio.
@@ -55,3 +55,8 @@
 - [x] Confirmar a persistência e a leitura da equipe Vertex no painel operacional.
 - [x] Confirmar visualmente no painel operacional que a equipe Vertex aparece nas listas ou filtros carregados do workspace.
 - [x] Adicionar teste verificável de interface ou evidência equivalente para a leitura da equipe Vertex no painel.
+- [x] Criar o marco real Revisão Campanha em 20/08/2026 às 23:00, classificado como revisão.
+- [x] Confirmar a persistência e a leitura do marco Revisão Campanha no painel operacional.
+- [x] Adicionar teste de interface que verifica a exibição do marco Revisão Campanha na agenda de Produção.
+- [x] Implementar e validar atualização protegida da equipe Vertex e do marco Revisão Campanha sem modificar os valores autorizados.
+- [x] Confirmar a leitura autenticada de Revisão Campanha na UI de Produção, distinguindo-a de sessões sem credenciais operacionais.

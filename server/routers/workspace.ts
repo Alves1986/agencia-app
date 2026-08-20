@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { createClient, createOperator, createTeam, getDashboardPreferences, listClients, listOperators, listTeams, updateDashboardPreferences } from "../db";
+import { createClient, createOperator, createTeam, getDashboardPreferences, listClients, listOperators, listTeams, updateDashboardPreferences, updateTeam } from "../db";
 import { protectedProcedure, router } from "../_core/trpc";
 import { getOperationalUserId } from "./helpers";
 
@@ -18,6 +18,12 @@ export const workspaceRouter = router({
     .input(z.object({ name: z.string().trim().min(2).max(140), color: z.string().trim().regex(/^#[0-9A-Fa-f]{6}$/).optional() }))
     .mutation(async ({ ctx, input }) => {
       await createTeam(await getOperationalUserId(ctx.user), input);
+      return { success: true } as const;
+    }),
+  updateTeam: protectedProcedure
+    .input(z.object({ teamId: z.number().int().positive(), name: z.string().trim().min(2).max(140), color: z.string().trim().regex(/^#[0-9A-Fa-f]{6}$/) }))
+    .mutation(async ({ ctx, input }) => {
+      await updateTeam(await getOperationalUserId(ctx.user), input.teamId, { name: input.name, color: input.color });
       return { success: true } as const;
     }),
   createOperator: protectedProcedure

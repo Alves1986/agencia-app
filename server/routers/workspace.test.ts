@@ -36,3 +36,12 @@ describe("responsible assignment contracts", () => {
     await expect(caller.production.assignResponsible({ taskId: 0, responsibleOperatorId: 1 })).rejects.toThrow();
   });
 });
+
+describe("team and agenda update contracts", () => {
+  it("rejects invalid identifiers before any protected update", async () => {
+    const caller = appRouter.createCaller(createContext());
+
+    await expect(caller.workspace.updateTeam({ teamId: 0, name: "Vertex", color: "#E85D3F" })).rejects.toThrow();
+    await expect(caller.production.updateEvent({ eventId: 0, title: "Revisão Campanha", eventType: "review", startsAt: new Date("2026-08-21T02:00:00.000Z") })).rejects.toThrow();
+  });
+});
