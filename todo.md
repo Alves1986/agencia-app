@@ -31,7 +31,9 @@
 - [x] Salvar no projeto um registro verificável da resposta real e da conferência visual da integração publicada.
 - [x] Cadastrar Globo Acabamentos como cliente real e confirmar sua persistência no painel.
 - [ ] Validar explicitamente criar, consultar, atualizar e excluir as entidades operacionais principais, com dados reais autorizados.
-- [ ] Testar e documentar os caminhos de erro da interface e dos contratos para URL inválida, backend indisponível, dados inválidos, carregamento e estado vazio.
+- [x] Testar e documentar os caminhos de erro da interface e dos contratos para URL inválida, backend indisponível, dados inválidos, carregamento e estado vazio.
+- [x] Documentar explicitamente os cenários validados de URL inválida, backend indisponível, dados inválidos, carregamento e estado vazio.
+- [x] Cobrir em teste uma URL malformada no adaptador FastAPI e registrar a evidência de aprovação.
 - [x] Criar e manter um projeto real para Globo Acabamentos como referência operacional.
 - [x] Criar e manter uma tarefa real vinculada ao projeto de Globo Acabamentos.
 - [x] Validar criação, leitura e atualização dos registros reais, preservando-os para revisão do usuário.

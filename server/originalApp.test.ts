@@ -14,6 +14,10 @@ describe("normalizeOriginalAppUrl", () => {
     expect(() => normalizeOriginalAppUrl("https://192.168.1.20")).toThrow("endereço local");
   });
 
+  it("rejeita uma URL malformada antes de iniciar a inspeção", () => {
+    expect(() => normalizeOriginalAppUrl("api.exemplo.com sem protocolo")).toThrow("URL pública válida");
+  });
+
   it("informa uma indisponibilidade de backend sem expor detalhes internos", async () => {
     const timeoutError = Object.assign(new Error("timeout"), { code: "ECONNABORTED" });
     const get = vi.fn().mockRejectedValue(timeoutError);

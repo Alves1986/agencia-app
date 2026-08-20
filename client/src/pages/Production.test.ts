@@ -77,4 +77,28 @@ describe("IntegrationPanel", () => {
     expect(markup).toContain("Campanha Aurora");
     expect(markup).toContain("Vincular arquivos selecionados");
   });
+
+  it("indica carregamento enquanto consulta a instância original", () => {
+    const markup = renderToStaticMarkup(
+      createElement(IntegrationPanel, {
+        ...baseProps,
+        loading: true,
+        integration: undefined,
+      }),
+    );
+
+    expect(markup).toContain("Consultando instância original…");
+  });
+
+  it("mostra o último erro de conexão sem expor detalhes internos", () => {
+    const markup = renderToStaticMarkup(
+      createElement(IntegrationPanel, {
+        ...baseProps,
+        connection: { connectionStatus: "error", lastError: "A conexão excedeu o tempo limite." },
+        integration: undefined,
+      }),
+    );
+
+    expect(markup).toContain("A conexão excedeu o tempo limite.");
+  });
 });
