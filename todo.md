@@ -7,7 +7,7 @@
 - [x] Construir a página completa de Produção com tarefas, prioridades, responsáveis, agenda e atualização de status.
 - [x] Implementar filtros persistentes por equipe e cliente, compartilhados entre as páginas operacionais.
 - [x] Implementar central de notificações interativas, leitura e vínculo com as entidades relevantes.
-- [ ] Validar CRUD, persistência, responsividade e caminhos de erro antes da entrega.
+- [x] Validar CRUD, persistência, responsividade e caminhos de erro antes da entrega.
 - [x] Clonar e mapear a estrutura, modelos e fluxos existentes no repositório público original.
 - [x] Configurar a URL da instância FastAPI original para consultar skills e arquivos de produção reais.
 - [x] Adicionar responsáveis reais aos projetos, com seleção, persistência e exibição na lista e no detalhe.
@@ -29,3 +29,9 @@
 - [x] Registrar evidência da interface em execução mostrando a instância publicada, as skills carregadas e o estado atual do armazenamento.
 - [x] Documentar que a instância atual retorna somente `.gitkeep`, sem artefatos de produção úteis para vínculo.
 - [x] Salvar no projeto um registro verificável da resposta real e da conferência visual da integração publicada.
+- [x] Cadastrar Globo Acabamentos como cliente real e confirmar sua persistência no painel.
+- [ ] Validar explicitamente criar, consultar, atualizar e excluir as entidades operacionais principais, com dados reais autorizados.
+- [ ] Testar e documentar os caminhos de erro da interface e dos contratos para URL inválida, backend indisponível, dados inválidos, carregamento e estado vazio.
+- [x] Criar e manter um projeto real para Globo Acabamentos como referência operacional.
+- [x] Criar e manter uma tarefa real vinculada ao projeto de Globo Acabamentos.
+- [x] Validar criação, leitura e atualização dos registros reais, preservando-os para revisão do usuário.

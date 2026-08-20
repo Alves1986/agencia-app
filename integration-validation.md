@@ -41,3 +41,7 @@ A página `/producao` foi capturada após a integração. O cartão exibiu o est
 ## Próxima verificação necessária
 
 Quando a aplicação FastAPI gerar um arquivo real, abra **Produção**, selecione o arquivo no cartão de integração, escolha um projeto e confirme o vínculo. Atualize este documento com o nome do arquivo e o projeto de destino após a validação.
+
+## Validação com dado real cadastrado
+
+Em 20 de agosto de 2026, o contrato autenticado `workspace.createClient` cadastrou o cliente **Globo Acabamentos** no espaço de trabalho administrador. A leitura subsequente pelo contrato `workspace.clients` confirmou o registro ativo com identificador `1`. Em seguida, a página `/projetos` foi recarregada: o bloco **Primeira configuração** deixou de ser exibido, comportamento que só ocorre quando a consulta de clientes devolve ao menos um registro. Não foram criados projetos, tarefas ou eventos adicionais sem solicitação do responsável.
