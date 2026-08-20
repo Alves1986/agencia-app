@@ -1,18 +1,29 @@
 import { and, asc, desc, eq, gte, like, lte } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import {
+  adCampaigns,
+  aiGenerations,
   calendarEvents,
+  carouselSlides,
+  creativeApprovals,
+  creativeVersions,
+  clientAgencyProfiles,
+  clientAiConnections,
   clients,
+  contentBriefs,
   InsertUser,
   notifications,
   operators,
   originalAppConnections,
   projectArtifacts,
   projects,
+  strategyDecisions,
   tasks,
   teams,
+  trendSignals,
   userDashboardPreferences,
   users,
+  videoScripts,
 } from "../drizzle/schema";
 import { ENV } from "./_core/env";
 
@@ -459,4 +470,294 @@ export async function addProjectArtifacts(userId: number, projectId: number, art
   const project = await getProject(userId, projectId);
   if (!project || artifacts.length === 0) return;
   await db.insert(projectArtifacts).values(artifacts.map(artifact => ({ projectId, ...artifact })));
+}
+
+type ProviderKind = "manus" | "openai" | "openai_compatible" | "gemini" | "anthropic";
+type CampaignMode = "ads" | "carousel" | "bundle";
+type CampaignStatus = "draft" | "generating" | "ready" | "review" | "approved" | "failed";
+type GenerationKind = "strategy" | "ads" | "carousel" | "bundle" | "image";
+type GenerationStatus = "queued" | "running" | "succeeded" | "failed";
+type CreativeKind = "ads" | "carousel" | "strategy" | "video" | "bundle";
+type ApprovalDecision = "approved" | "changes_requested" | "rejected";
+
+export async function listClientAiConnections(userId: number, clientId?: number) {
+  const db = await requireDb();
+  const conditions = [eq(clientAiConnections.ownerUserId, userId)];
+  if (clientId) conditions.push(eq(clientAiConnections.clientId, clientId));
+  return db
+    .select({
+      id: clientAiConnections.id,
+      clientId: clientAiConnections.clientId,
+      label: clientAiConnections.label,
+      provider: clientAiConnections.provider,
+      apiBaseUrl: clientAiConnections.apiBaseUrl,
+      defaultModel: clientAiConnections.defaultModel,
+      defaultImageModel: clientAiConnections.defaultImageModel,
+      keyHint: clientAiConnections.keyHint,
+      status: clientAiConnections.status,
+      createdAt: clientAiConnections.createdAt,
+      updatedAt: clientAiConnections.updatedAt,
+    })
+    .from(clientAiConnections)
+    .where(and(...conditions))
+    .orderBy(asc(clientAiConnections.label));
+}
+
+export async function createClientAiConnection(userId: number, input: {
+  clientId: number;
+  label: string;
+  provider: ProviderKind;
+  apiBaseUrl?: string | null;
+  defaultModel: string;
+  defaultImageModel?: string | null;
+  encryptedApiKey?: string | null;
+  keyHint?: string | null;
+}) {
+  const db = await requireDb();
+  const ownedClient = await db.select({ id: clients.id }).from(clients).where(and(eq(clients.id, input.clientId), eq(clients.createdByUserId, userId))).limit(1);
+  if (!ownedClient[0]) throw new Error("Cliente inválido para este espaço de trabalho");
+  const [created] = await db.insert(clientAiConnections).values({ ...input, ownerUserId: userId }).$returningId();
+  return created.id;
+}
+
+export async function getClientAiConnectionSecret(userId: number, connectionId: number) {
+  const db = await requireDb();
+  const rows = await db.select().from(clientAiConnections).where(and(eq(clientAiConnections.id, connectionId), eq(clientAiConnections.ownerUserId, userId), eq(clientAiConnections.status, "active"))).limit(1);
+  return rows[0];
+}
+
+export async function listAdCampaigns(userId: number, clientId?: number) {
+  const db = await requireDb();
+  const conditions = [eq(adCampaigns.ownerUserId, userId)];
+  if (clientId) conditions.push(eq(adCampaigns.clientId, clientId));
+  return db
+    .select({ campaign: adCampaigns, client: clients, connection: clientAiConnections })
+    .from(adCampaigns)
+    .innerJoin(clients, eq(adCampaigns.clientId, clients.id))
+    .leftJoin(clientAiConnections, eq(adCampaigns.providerConnectionId, clientAiConnections.id))
+    .where(and(...conditions))
+    .orderBy(desc(adCampaigns.updatedAt));
+}
+
+export async function getAdCampaign(userId: number, campaignId: number) {
+  const db = await requireDb();
+  const rows = await db
+    .select({ campaign: adCampaigns, client: clients, connection: clientAiConnections })
+    .from(adCampaigns)
+    .innerJoin(clients, eq(adCampaigns.clientId, clients.id))
+    .leftJoin(clientAiConnections, eq(adCampaigns.providerConnectionId, clientAiConnections.id))
+    .where(and(eq(adCampaigns.id, campaignId), eq(adCampaigns.ownerUserId, userId)))
+    .limit(1);
+  return rows[0];
+}
+
+export async function createAdCampaign(userId: number, input: {
+  clientId: number;
+  providerConnectionId?: number | null;
+  name: string;
+  mode: CampaignMode;
+  objective: string;
+  briefingJson: string;
+}) {
+  const db = await requireDb();
+  const ownedClient = await db.select({ id: clients.id }).from(clients).where(and(eq(clients.id, input.clientId), eq(clients.createdByUserId, userId))).limit(1);
+  if (!ownedClient[0]) throw new Error("Cliente inválido para este espaço de trabalho");
+  if (input.providerConnectionId) {
+    const connection = await getClientAiConnectionSecret(userId, input.providerConnectionId);
+    if (!connection || connection.clientId !== input.clientId) throw new Error("Provedor inválido para este cliente");
+  }
+  const [created] = await db.insert(adCampaigns).values({ ...input, ownerUserId: userId }).$returningId();
+  return created.id;
+}
+
+export async function updateAdCampaignStatus(userId: number, campaignId: number, status: CampaignStatus) {
+  const db = await requireDb();
+  await db.update(adCampaigns).set({ status }).where(and(eq(adCampaigns.id, campaignId), eq(adCampaigns.ownerUserId, userId)));
+}
+
+export async function createAiGeneration(userId: number, input: {
+  campaignId: number;
+  kind: GenerationKind;
+  provider: string;
+  model: string;
+  promptSnapshot: string;
+}) {
+  const db = await requireDb();
+  const [created] = await db.insert(aiGenerations).values({ ...input, ownerUserId: userId, status: "running" }).$returningId();
+  return created.id;
+}
+
+export async function completeAiGeneration(userId: number, generationId: number, input: { status: GenerationStatus; outputJson?: string | null; errorMessage?: string | null }) {
+  const db = await requireDb();
+  await db.update(aiGenerations).set({ ...input, completedAt: new Date() }).where(and(eq(aiGenerations.id, generationId), eq(aiGenerations.ownerUserId, userId)));
+}
+
+export async function createCreativeVersion(userId: number, input: {
+  campaignId: number;
+  generationId?: number | null;
+  kind: CreativeKind;
+  summary?: string | null;
+  payloadJson: string;
+}) {
+  const db = await requireDb();
+  const campaign = await getAdCampaign(userId, input.campaignId);
+  if (!campaign) throw new Error("Campanha não encontrada");
+  const latest = await db
+    .select({ versionNumber: creativeVersions.versionNumber })
+    .from(creativeVersions)
+    .where(and(eq(creativeVersions.campaignId, input.campaignId), eq(creativeVersions.kind, input.kind), eq(creativeVersions.ownerUserId, userId)))
+    .orderBy(desc(creativeVersions.versionNumber))
+    .limit(1);
+  const [created] = await db
+    .insert(creativeVersions)
+    .values({ ...input, ownerUserId: userId, versionNumber: (latest[0]?.versionNumber || 0) + 1, status: "review" })
+    .$returningId();
+  return created.id;
+}
+
+export async function listCreativeVersions(userId: number, campaignId: number) {
+  const db = await requireDb();
+  const campaign = await getAdCampaign(userId, campaignId);
+  if (!campaign) return [];
+  return db
+    .select()
+    .from(creativeVersions)
+    .where(and(eq(creativeVersions.campaignId, campaignId), eq(creativeVersions.ownerUserId, userId)))
+    .orderBy(desc(creativeVersions.createdAt));
+}
+
+export async function createCreativeApproval(userId: number, input: { creativeVersionId: number; decision: ApprovalDecision; note?: string | null }) {
+  const db = await requireDb();
+  const versionRows = await db
+    .select()
+    .from(creativeVersions)
+    .where(and(eq(creativeVersions.id, input.creativeVersionId), eq(creativeVersions.ownerUserId, userId)))
+    .limit(1);
+  const version = versionRows[0];
+  if (!version) throw new Error("Versão criativa não encontrada");
+  const [created] = await db
+    .insert(creativeApprovals)
+    .values({ ...input, campaignId: version.campaignId, ownerUserId: userId, reviewerUserId: userId })
+    .$returningId();
+  const status = input.decision === "approved" ? "approved" : input.decision === "rejected" ? "rejected" : "review";
+  await db.update(creativeVersions).set({ status }).where(and(eq(creativeVersions.id, version.id), eq(creativeVersions.ownerUserId, userId)));
+  return created.id;
+}
+
+export async function listCreativeApprovals(userId: number, creativeVersionId: number) {
+  const db = await requireDb();
+  const versionRows = await db
+    .select({ id: creativeVersions.id })
+    .from(creativeVersions)
+    .where(and(eq(creativeVersions.id, creativeVersionId), eq(creativeVersions.ownerUserId, userId)))
+    .limit(1);
+  if (!versionRows[0]) return [];
+  return db
+    .select()
+    .from(creativeApprovals)
+    .where(and(eq(creativeApprovals.creativeVersionId, creativeVersionId), eq(creativeApprovals.ownerUserId, userId)))
+    .orderBy(desc(creativeApprovals.createdAt));
+}
+
+export async function listCarouselSlides(userId: number, campaignId: number) {
+  const db = await requireDb();
+  const campaign = await getAdCampaign(userId, campaignId);
+  if (!campaign) return [];
+  return db.select().from(carouselSlides).where(eq(carouselSlides.campaignId, campaignId)).orderBy(asc(carouselSlides.slideNumber));
+}
+
+export async function replaceCarouselSlides(userId: number, campaignId: number, generationId: number, slides: Array<{
+  slideNumber: number;
+  role: "cover" | "context" | "insight" | "proof" | "solution" | "cta";
+  headline: string;
+  body?: string | null;
+  visualDirection?: string | null;
+  imagePrompt?: string | null;
+}>) {
+  const db = await requireDb();
+  const campaign = await getAdCampaign(userId, campaignId);
+  if (!campaign) throw new Error("Campanha não encontrada");
+  await db.delete(carouselSlides).where(eq(carouselSlides.campaignId, campaignId));
+  if (slides.length) await db.insert(carouselSlides).values(slides.map(slide => ({ ...slide, campaignId, generationId })));
+}
+
+export async function updateCarouselSlideAsset(userId: number, slideId: number, assetUrl: string) {
+  const db = await requireDb();
+  const rows = await db
+    .select({ id: carouselSlides.id })
+    .from(carouselSlides)
+    .innerJoin(adCampaigns, eq(carouselSlides.campaignId, adCampaigns.id))
+    .where(and(eq(carouselSlides.id, slideId), eq(adCampaigns.ownerUserId, userId)))
+    .limit(1);
+  if (!rows[0]) throw new Error("Slide não encontrado");
+  await db.update(carouselSlides).set({ assetUrl }).where(eq(carouselSlides.id, slideId));
+}
+
+export async function getClientAgencyProfile(userId: number, clientId: number) {
+  const db = await requireDb();
+  const rows = await db.select().from(clientAgencyProfiles).where(and(eq(clientAgencyProfiles.clientId, clientId), eq(clientAgencyProfiles.ownerUserId, userId))).limit(1);
+  return rows[0];
+}
+
+export async function upsertClientAgencyProfile(userId: number, input: {
+  clientId: number; positioning?: string | null; voice?: string | null; audience?: string | null; offers?: string | null;
+  proofPolicy?: string | null; visualSystem?: string | null; departmentContextJson?: string | null;
+}) {
+  const db = await requireDb();
+  const ownedClient = await db.select({ id: clients.id }).from(clients).where(and(eq(clients.id, input.clientId), eq(clients.createdByUserId, userId))).limit(1);
+  if (!ownedClient[0]) throw new Error("Cliente inválido para este espaço de trabalho");
+  await db.insert(clientAgencyProfiles).values({ ...input, ownerUserId: userId }).onDuplicateKeyUpdate({ set: { ...input } });
+  return getClientAgencyProfile(userId, input.clientId);
+}
+
+export async function createContentBrief(userId: number, input: {
+  clientId: number; campaignId?: number | null; title: string; sourceType: "briefing" | "idea" | "trend" | "reference" | "decision"; objective?: string | null; content: string;
+}) {
+  const db = await requireDb();
+  const [created] = await db.insert(contentBriefs).values({ ...input, ownerUserId: userId }).$returningId();
+  return created.id;
+}
+
+export async function listAgencyBriefs(userId: number, clientId: number) {
+  const db = await requireDb();
+  return db.select().from(contentBriefs).where(and(eq(contentBriefs.ownerUserId, userId), eq(contentBriefs.clientId, clientId))).orderBy(desc(contentBriefs.updatedAt));
+}
+
+export async function createTrendSignal(userId: number, input: {
+  clientId: number; campaignId?: number | null; platform: "instagram" | "youtube" | "x" | "tiktok" | "other"; sourceUrl?: string | null; title: string; reactionNotes?: string | null; metricsJson?: string | null; score?: number | null;
+}) {
+  const db = await requireDb();
+  const [created] = await db.insert(trendSignals).values({ ...input, ownerUserId: userId }).$returningId();
+  return created.id;
+}
+
+export async function listTrendSignals(userId: number, clientId: number) {
+  const db = await requireDb();
+  return db.select().from(trendSignals).where(and(eq(trendSignals.ownerUserId, userId), eq(trendSignals.clientId, clientId))).orderBy(desc(trendSignals.updatedAt));
+}
+
+export async function createVideoScript(userId: number, input: {
+  clientId: number; campaignId?: number | null; contentBriefId?: number | null; title: string; scriptJson: string; editPlan?: string | null;
+}) {
+  const db = await requireDb();
+  const [created] = await db.insert(videoScripts).values({ ...input, ownerUserId: userId }).$returningId();
+  return created.id;
+}
+
+export async function listVideoScripts(userId: number, clientId: number) {
+  const db = await requireDb();
+  return db.select().from(videoScripts).where(and(eq(videoScripts.ownerUserId, userId), eq(videoScripts.clientId, clientId))).orderBy(desc(videoScripts.updatedAt));
+}
+
+export async function createStrategyDecision(userId: number, input: {
+  clientId: number; campaignId?: number | null; question: string; lensOutputJson: string; recommendation: string; primaryRisk?: string | null;
+}) {
+  const db = await requireDb();
+  const [created] = await db.insert(strategyDecisions).values({ ...input, ownerUserId: userId }).$returningId();
+  return created.id;
+}
+
+export async function listStrategyDecisions(userId: number, clientId: number) {
+  const db = await requireDb();
+  return db.select().from(strategyDecisions).where(and(eq(strategyDecisions.ownerUserId, userId), eq(strategyDecisions.clientId, clientId))).orderBy(desc(strategyDecisions.updatedAt));
 }

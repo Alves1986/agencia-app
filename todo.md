@@ -60,3 +60,22 @@
 - [x] Adicionar teste de interface que verifica a exibição do marco Revisão Campanha na agenda de Produção.
 - [x] Implementar e validar atualização protegida da equipe Vertex e do marco Revisão Campanha sem modificar os valores autorizados.
 - [x] Confirmar a leitura autenticada de Revisão Campanha na UI de Produção, distinguindo-a de sessões sem credenciais operacionais.
+- [x] Consolidar os documentos de produto e a skill de carrosséis enviados pelo usuário em uma especificação versionada.
+- [x] Definir o modelo seguro de provedor, credencial por cliente, permissões e escopo de uso para geração com IA.
+- [x] Modelar persistência para briefings, campanhas, anúncios, carrosséis, gerações, versões e aprovações por cliente.
+- [x] Criar o fluxo guiado que seleciona cliente, provedor e modo de geração integrado ou separado.
+- [x] Implementar o primeiro gerador estruturado de anúncios e carrosséis sem expor chaves no navegador.
+- [x] Validar os novos contratos, a experiência operacional e documentar a manutenção da plataforma.
+- [x] Consolidar os prompts de tendência, vídeo, conselho de IA e departamentos em um mapa de capacidades da agência.
+- [x] Expandir o modelo de dados para briefs de conteúdo, sinais de tendência, roteiros de vídeo, decisões e áreas de trabalho por cliente.
+- [x] Implementar uma orquestração inicial que conecte estratégia, criação de anúncios, carrosséis, conteúdo e vídeo em uma campanha única.
+- [x] Incluir um conselho estratégico de IA para decisões de campanha, com recomendação e risco registrados para revisão humana.
+- [x] Criar uma visão unificada de agência por cliente, sem transformar referências externas em dados inventados ou automações autônomas não autorizadas.
+- [x] Adicionar persistência explícita e testes para versões e aprovações de anúncios e carrosséis por cliente.
+- [x] Cobrir com testes de contrato e integração a geração da Agência IA, verificando saídas persistidas de anúncios e slides de carrossel sem expor credenciais.
+- [x] Documentar a manutenção da Agência IA, incluindo provedores, chaves, operação, erros e recuperação, e registrar evidência funcional do fluxo completo.
+- [x] Adicionar teste de geração com carrossel que confirma a persistência de slides e das saídas estruturadas de anúncios.
+- [x] Adicionar teste de segurança garantindo que listagens e respostas da Agência IA não retornam chaves ou segredos descriptografados.
+- [x] Registrar evidência funcional rastreável de campanha integrada, geração e revisão humana, ou documentar formalmente um bloqueio por credencial ausente.
+- [x] Confirmar e versionar a evidência da Agência IA com cobertura automatizada, ausência de conexões configuradas e bloqueio explícito de geração real sem credencial autorizada.
+- [ ] Sincronizar a documentação de validação da Agência IA no repositório após confirmar sua gravação local.

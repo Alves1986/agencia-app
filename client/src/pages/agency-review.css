@@ -1,0 +1,10 @@
+.agency-row-actions { align-items: center; display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end; }
+.agency-review-queue { margin-top: 18px; }
+.agency-version-row { align-items: center; border-top: 1px solid #e2eaee; display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr) auto; padding: 14px 0; }
+.agency-version-row > div:first-child { display: grid; gap: 4px; min-width: 0; }
+.agency-version-row strong { color: #223f55; font-size: 13px; text-transform: capitalize; }
+.agency-version-row span { color: #5e7585; font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.agency-version-row small { color: #7d919e; font-size: 11px; }
+.agency-approve-action { min-height: 34px; padding: 0 10px; }
+.agency-reject-action { color: #ae4a42; }
+@media (max-width: 680px) { .agency-version-row { align-items: flex-start; grid-template-columns: 1fr; } .agency-row-actions { justify-content: flex-start; } }

@@ -7,6 +7,7 @@ import { originalAppRouter } from "./routers/originalApp";
 import { productionRouter } from "./routers/production";
 import { projectsRouter } from "./routers/projects";
 import { workspaceRouter } from "./routers/workspace";
+import { agencyRouter } from "./routers/agency";
 
 export const appRouter = router({
   system: systemRouter,
@@ -23,6 +24,7 @@ export const appRouter = router({
   production: productionRouter,
   notifications: notificationsRouter,
   originalApp: originalAppRouter,
+  agency: agencyRouter,
 });
 
 export type AppRouter = typeof appRouter;

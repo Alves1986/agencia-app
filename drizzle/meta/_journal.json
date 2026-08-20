@@ -15,6 +15,27 @@
       "when": 1787195165409,
       "tag": "0001_low_mister_fear",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1787223835141,
+      "tag": "0002_tearful_puppet_master",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1787224208872,
+      "tag": "0003_cynical_prowler",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1787224759842,
+      "tag": "0004_simple_zuras",
+      "breakpoints": true
     }
   ]
 }

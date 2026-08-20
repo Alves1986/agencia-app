@@ -8,6 +8,7 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import Production from "./pages/Production";
 import Projects from "./pages/Projects";
+import Agency from "./pages/Agency";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -16,6 +17,7 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/projetos" component={Projects} />
       <Route path="/producao" component={Production} />
+      <Route path="/agencia" component={Agency} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>
