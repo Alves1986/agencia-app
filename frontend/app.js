@@ -2,6 +2,10 @@ let currentSkill = 'agencia';
 let chatHistory = [];
 let isStreaming = false;
 
+// API URL — detecta automaticamente
+// Em producao, defina a variavel: window.API_URL = 'https://seu-backend.onrender.com'
+const API_URL = window.API_URL || '';
+
 // Init
 document.addEventListener('DOMContentLoaded', () => {
     loadConfig();
@@ -12,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // Config
 async function loadConfig() {
     try {
-        const resp = await fetch('/api/config');
+        const resp = await fetch(`${API_URL}/api/config`);
         const config = await resp.json();
 
         if (config.has_key) {
@@ -95,7 +99,7 @@ async function saveConfig() {
     }
 
     try {
-        await fetch('/api/config', {
+        await fetch(`${API_URL}/api/config`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ provider, api_key: key, model }),
@@ -225,7 +229,7 @@ async function sendMessage() {
     const typingEl = addTypingIndicator();
 
     try {
-        const resp = await fetch('/api/chat', {
+        const resp = await fetch(`${API_URL}/api/chat`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -316,7 +320,7 @@ function formatMarkdown(text) {
 // Files
 async function loadFiles() {
     try {
-        const resp = await fetch('/api/storage/list');
+        const resp = await fetch(`${API_URL}/api/storage/list`);
         const files = await resp.json();
         const container = document.getElementById('files-list');
 
@@ -337,7 +341,7 @@ async function loadFiles() {
 
 async function viewFile(filename) {
     try {
-        const resp = await fetch(`/api/storage/${filename}`);
+        const resp = await fetch(`${API_URL}/api/storage/${filename}`);
         const data = await resp.json();
         addMessage('assistant', `**${filename}:**\n\n${data.response || data.content}`);
     } catch (e) {

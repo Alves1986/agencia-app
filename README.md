@@ -72,5 +72,45 @@ agencia-app/
 ├── config.json          # API keys (local)
 ├── requirements.txt     # Dependencias
 ├── start.bat           # Iniciar (Windows)
-└── start.sh            # Iniciar (Mac/Linux)
+├── start.sh            # Iniciar (Mac/Linux)
+├── render.yaml         # Deploy backend (Render)
+└── vercel.json         # Deploy frontend (Vercel)
 ```
+
+## Deploy na Nuvem (Vercel + Render)
+
+### Backend no Render (gratuito)
+
+1. Acesse [render.com](https://render.com) e crie conta
+2. Clique "New" → "Web Service"
+3. Conecte seu repositorio GitHub
+4. Configure:
+   - **Name:** agencia-app-backend
+   - **Runtime:** Python 3
+   - **Build Command:** `pip install -r requirements.txt`
+   - **Start Command:** `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
+5. Clique "Create Web Service"
+6. Anote a URL (ex: `https://agencia-app-backend.onrender.com`)
+
+### Frontend no Vercel (gratuito)
+
+1. Acesse [vercel.com](https://vercel.com) e crie conta
+2. Clique "Add New" → "Project"
+3. Conecte seu repositorio GitHub
+4. Configure:
+   - **Framework Preset:** Other
+   - **Build Command:** (deixe vazio)
+   - **Output Directory:** `frontend`
+5. Adicione variavel de ambiente:
+   - **Name:** `API_URL`
+   - **Value:** URL do backend no Render
+6. Clique "Deploy"
+
+### Configurar o Backend
+
+Depois do deploy, acesse o backend e configure:
+- Acesse `https://seu-backend.onrender.com`
+- Clique em "Configuracao"
+- Escolha o provedor e cole sua API key
+
+**Importante:** No modo nuvem, a API key fica salva no servidor (Render). Para mais seguranca, use variaveis de ambiente no Render.
