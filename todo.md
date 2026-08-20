@@ -86,4 +86,4 @@
 - [x] Adicionar teste de interface para o nome e a URL da logo VERTEX Consulting no menu lateral.
 - [x] Confirmar o upload permanente da logo VERTEX Consulting e registrar a URL efetivamente usada pela interface.
 - [x] Validar a assinatura VERTEX Consulting em viewport móvel e registrar a evidência responsiva da navegação.
-- [ ] Sincronizar a atualização de identidade VERTEX Consulting na branch de revisão.
+- [x] Sincronizar a atualização de identidade VERTEX Consulting na branch de revisão.
