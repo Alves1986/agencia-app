@@ -27,3 +27,12 @@ describe("workspace.createClient", () => {
     await expect(caller.workspace.createClient({ name: "A" })).rejects.toThrow();
   });
 });
+
+describe("responsible assignment contracts", () => {
+  it("rejects invalid project and task identifiers before a write", async () => {
+    const caller = appRouter.createCaller(createContext());
+
+    await expect(caller.projects.assignResponsible({ projectId: 0, responsibleOperatorId: 1 })).rejects.toThrow();
+    await expect(caller.production.assignResponsible({ taskId: 0, responsibleOperatorId: 1 })).rejects.toThrow();
+  });
+});

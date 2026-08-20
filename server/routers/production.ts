@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { createCalendarEvent, createNotification, createTask, getTask, listCalendarEvents, listTasks, updateTaskStatus } from "../db";
+import { assignTaskResponsible, createCalendarEvent, createNotification, createTask, getTask, listCalendarEvents, listTasks, updateTaskStatus } from "../db";
 import { protectedProcedure, router } from "../_core/trpc";
 import { getOperationalUserId } from "./helpers";
 
@@ -31,6 +31,12 @@ export const productionRouter = router({
     .input(z.object({ taskId: z.number().int().positive(), status: taskStatus }))
     .mutation(async ({ ctx, input }) => {
       await updateTaskStatus(await getOperationalUserId(ctx.user), input.taskId, input.status);
+      return { success: true } as const;
+    }),
+  assignResponsible: protectedProcedure
+    .input(z.object({ taskId: z.number().int().positive(), responsibleOperatorId: z.number().int().positive().nullable() }))
+    .mutation(async ({ ctx, input }) => {
+      await assignTaskResponsible(await getOperationalUserId(ctx.user), input.taskId, input.responsibleOperatorId);
       return { success: true } as const;
     }),
   createEvent: protectedProcedure

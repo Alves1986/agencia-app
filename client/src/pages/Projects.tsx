@@ -1,7 +1,7 @@
 import { NewProjectLink, StudioShell, formatDate, priorityLabel, projectStatusLabel } from "@/components/StudioShell";
 import { trpc } from "@/lib/trpc";
 import { ArrowRight, BriefcaseBusiness, FileStack, Loader2, Plus, Search, Settings2, UserPlus, X } from "lucide-react";
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import React, { FormEvent, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { useLocation } from "wouter";
 
@@ -57,7 +57,7 @@ export default function Projects() {
         <section className="ops-panel ops-project-table"><div className="ops-panel-heading"><div><p className="ops-section-kicker">Lista operacional</p><h2>{projects.data?.length ?? 0} projeto(s)</h2></div><BriefcaseBusiness size={20} /></div>
           {projects.isLoading ? <div className="ops-page-loading"><Loader2 size={20} /> Carregando projetos…</div> : null}
           {!projects.isLoading && !(projects.data?.length) ? <div className="ops-empty"><p>Não há projetos que correspondam aos filtros atuais.</p><button className="ops-text-button" type="button" onClick={() => setCreateOpen(true)}>Criar primeiro projeto</button></div> : null}
-          <div className="ops-project-table-list">{(projects.data ?? []).map(({ project, client, team, responsible }) => <button key={project.id} className={selectedProjectId === project.id ? "ops-project-table-row is-selected" : "ops-project-table-row"} type="button" onClick={() => setSelectedProjectId(project.id)}><span className={`ops-status-dot ${project.priority}`} /><span><strong>{project.name}</strong><small>{client.name}{team ? ` · ${team.name}` : ""}{responsible ? ` · ${responsible.name}` : ""}</small></span><span><small>Próximo marco</small><b>{formatDate(project.dueAt)}</b></span><span className={`ops-status-tag ${project.status}`}>{projectStatusLabel[project.status]}</span><span className="ops-percent">{project.progress}%</span></button>)}</div>
+          <div className="ops-project-table-list">{(projects.data ?? []).map(row => <ProjectListEntry key={row.project.id} row={row} selected={selectedProjectId === row.project.id} onSelect={() => setSelectedProjectId(row.project.id)} />)}</div>
         </section>
         <aside className="ops-detail-panel">{selectedProjectId && selected.data ? <><button type="button" className="ops-close-detail" onClick={() => setSelectedProjectId(null)}><X size={17} /> Fechar</button><p className="ops-section-kicker">Projeto selecionado</p><h2>{selected.data.project.name}</h2><p>{selected.data.project.description || "Sem descrição registrada."}</p><dl className="ops-detail-list"><div><dt>Cliente</dt><dd>{selected.data.client.name}</dd></div><div><dt>Equipe</dt><dd>{selected.data.team?.name ?? "Não atribuída"}</dd></div><div><dt>Responsável</dt><dd>{selected.data.responsible?.name ?? "Não atribuído"}</dd></div><div><dt>Prioridade</dt><dd>{priorityLabel[selected.data.project.priority]}</dd></div><div><dt>Prazo</dt><dd>{formatDate(selected.data.project.dueAt)}</dd></div></dl><label className="ops-status-control">Status<select value={selected.data.project.status} onChange={event => updateStatus.mutate({ projectId: selected.data!.project.id, status: event.target.value as typeof statuses[number] })}>{statuses.map(status => <option key={status} value={status}>{projectStatusLabel[status]}</option>)}</select></label><div className="ops-progress-readout"><span>Progresso registrado</span><b>{selected.data.project.progress}%</b><i><em style={{ width: `${selected.data.project.progress}%` }} /></i></div><div className="ops-artifacts"><div><FileStack size={17} /><strong>Entregas vinculadas</strong></div>{artifacts.isLoading ? <small>Consultando arquivos…</small> : artifacts.data?.length ? artifacts.data.map(file => <span key={file.id}>{file.fileName}</span>) : <small>Conecte a aplicação original na Produção e vincule arquivos reais aqui.</small>}</div></> : <div className="ops-detail-placeholder"><Settings2 size={22} /><strong>Selecione um projeto</strong><p>Abra um item da lista para ver contexto, prazo, status e arquivos associados.</p></div>}</aside>
       </div>
@@ -65,6 +65,11 @@ export default function Projects() {
     {createOpen ? <ProjectComposer clients={clients.data ?? []} teams={teams.data ?? []} operators={operators.data ?? []} onClose={() => { setCreateOpen(false); setLocation("/projetos"); }} onSubmit={submitProject} pending={createProject.isPending} /> : null}
     {operatorOpen ? <OperatorComposer teams={teams.data ?? []} onClose={() => setOperatorOpen(false)} onSubmit={submitOperator} pending={createOperator.isPending} /> : null}
   </StudioShell>;
+}
+
+export function ProjectListEntry({ row, selected, onSelect }: { row: any; selected: boolean; onSelect: () => void }) {
+  const { project, client, team, responsible } = row;
+  return <button className={selected ? "ops-project-table-row is-selected" : "ops-project-table-row"} type="button" onClick={onSelect}><span className={`ops-status-dot ${project.priority}`} /><span><strong>{project.name}</strong><small>{client.name}{team ? ` · ${team.name}` : ""}{responsible ? ` · ${responsible.name}` : ""}</small></span><span><small>Próximo marco</small><b>{formatDate(project.dueAt)}</b></span><span className={`ops-status-tag ${project.status}`}>{projectStatusLabel[project.status]}</span><span className="ops-percent">{project.progress}%</span></button>;
 }
 
 function WorkspaceSetup({ onClient, onTeam }: { onClient: (name: string) => void; onTeam: (name: string, color: string) => void }) {

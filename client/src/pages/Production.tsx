@@ -55,14 +55,7 @@ export default function Production() {
           return (
             <div className="ops-task-column" key={status}>
               <div className="ops-task-column-heading"><span>{taskStatusLabel[status]}</span><b>{group.length}</b></div>
-              {group.map(({ task, project, client, responsible }) => (
-                <article key={task.id} id={`tarefa-${task.id}`} className={`ops-task-card ${task.priority}${task.id === taskFromUrl ? " is-targeted" : ""}`}>
-                  <div><span className="ops-priority-chip">{priorityLabel[task.priority]}</span><button type="button" aria-label={`Atualizar status da tarefa ${task.title}`} className="ops-task-status" onClick={() => updateStatus.mutate({ taskId: task.id, status: task.status === "done" ? "backlog" : "done" })}><CheckSquare2 size={17} /></button></div>
-                  <strong>{task.title}</strong>
-                  <p>{project?.name ?? "Sem projeto vinculado"}{client ? ` · ${client.name}` : ""}{responsible ? ` · ${responsible.name}` : ""}</p>
-                  <footer><span>{formatDate(task.dueAt)}</span><select value={task.status} onChange={event => updateStatus.mutate({ taskId: task.id, status: event.target.value as (typeof taskStatuses)[number] })}>{taskStatuses.map(item => <option key={item} value={item}>{taskStatusLabel[item]}</option>)}</select></footer>
-                </article>
-              ))}
+              {group.map(row => <ProductionTaskCard key={row.task.id} row={row} targeted={row.task.id === taskFromUrl} onStatus={status => updateStatus.mutate({ taskId: row.task.id, status })} />)}
               {!group.length ? <div className="ops-empty-slot">Sem tarefas neste estágio.</div> : null}
             </div>
           );
@@ -73,6 +66,11 @@ export default function Production() {
     {composer ? <ProductionComposer mode={composer} projects={projects.data ?? []} operators={operators.data ?? []} onClose={() => setComposer(null)} onTask={submitTask} onEvent={submitEvent} pending={createTask.isPending || createEvent.isPending} /> : null}
     {taskFromUrl !== null && taskDetail.data ? <TaskDetail task={taskDetail.data} detailRef={taskDetailRef} onClose={() => setLocation("/producao")} onStatus={status => updateStatus.mutate({ taskId: taskDetail.data!.task.id, status })} /> : null}
   </StudioShell>;
+}
+
+export function ProductionTaskCard({ row, targeted, onStatus }: { row: any; targeted: boolean; onStatus: (status: (typeof taskStatuses)[number]) => void }) {
+  const { task, project, client, responsible } = row;
+  return <article id={`tarefa-${task.id}`} className={`ops-task-card ${task.priority}${targeted ? " is-targeted" : ""}`}><div><span className="ops-priority-chip">{priorityLabel[task.priority]}</span><button type="button" aria-label={`Atualizar status da tarefa ${task.title}`} className="ops-task-status" onClick={() => onStatus(task.status === "done" ? "backlog" : "done")}><CheckSquare2 size={17} /></button></div><strong>{task.title}</strong><p>{project?.name ?? "Sem projeto vinculado"}{client ? ` · ${client.name}` : ""}{responsible ? ` · ${responsible.name}` : ""}</p><footer><span>{formatDate(task.dueAt)}</span><select value={task.status} onChange={event => onStatus(event.target.value as (typeof taskStatuses)[number])}>{taskStatuses.map(item => <option key={item} value={item}>{taskStatusLabel[item]}</option>)}</select></footer></article>;
 }
 
 export function IntegrationPanel({ connectionUrl, setConnectionUrl, connection, integration, loading, projects, projectToAttach, setProjectToAttach, selectedFiles, toggleFile, onConnect, connecting, onAttach, attaching }: any) {

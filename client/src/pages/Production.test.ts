@@ -1,7 +1,7 @@
 import { createElement, createRef } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
-import { IntegrationPanel, TaskDetail } from "./Production";
+import { IntegrationPanel, ProductionTaskCard, TaskDetail } from "./Production";
 
 describe("TaskDetail", () => {
   it("renderiza o detalhe da tarefa vinculada com um alvo de foco acessível", () => {
@@ -24,6 +24,27 @@ describe("TaskDetail", () => {
     expect(markup).toContain("Campanha Aurora");
     expect(markup).toContain('role="dialog"');
     expect(markup).toContain('tabindex="-1"');
+  });
+});
+
+describe("ProductionTaskCard", () => {
+  it("exibe Patrick na tarefa real de Globo Acabamentos após a leitura do vínculo", () => {
+    const markup = renderToStaticMarkup(
+      createElement(ProductionTaskCard, {
+        row: {
+          task: { id: 1, title: "Revisar o fluxo inicial do painel", priority: "medium", status: "ready", dueAt: null },
+          project: { name: "Validação operacional — Globo Acabamentos" },
+          client: { name: "Globo Acabamentos" },
+          responsible: { name: "Patrick" },
+        },
+        targeted: false,
+        onStatus: vi.fn(),
+      }),
+    );
+
+    expect(markup).toContain("Revisar o fluxo inicial do painel");
+    expect(markup).toContain("Globo Acabamentos");
+    expect(markup).toContain("Patrick");
   });
 });
 

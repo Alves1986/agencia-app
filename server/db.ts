@@ -207,6 +207,15 @@ export async function updateProjectStatus(userId: number, projectId: number, sta
   await db.update(projects).set({ status }).where(and(eq(projects.id, projectId), eq(projects.ownerUserId, userId)));
 }
 
+export async function assignProjectResponsible(userId: number, projectId: number, responsibleOperatorId: number | null) {
+  const db = await requireDb();
+  if (responsibleOperatorId) {
+    const operator = await db.select({ id: operators.id }).from(operators).where(and(eq(operators.id, responsibleOperatorId), eq(operators.createdByUserId, userId))).limit(1);
+    if (!operator[0]) throw new Error("Responsável inválido para este espaço de trabalho");
+  }
+  await db.update(projects).set({ responsibleOperatorId }).where(and(eq(projects.id, projectId), eq(projects.ownerUserId, userId)));
+}
+
 type TaskFilters = {
   clientId?: number;
   teamId?: number;
@@ -286,6 +295,15 @@ export async function updateTaskStatus(userId: number, taskId: number, status: "
     .update(tasks)
     .set({ status, completedAt: status === "done" ? new Date() : null })
     .where(and(eq(tasks.id, taskId), eq(tasks.createdByUserId, userId)));
+}
+
+export async function assignTaskResponsible(userId: number, taskId: number, responsibleOperatorId: number | null) {
+  const db = await requireDb();
+  if (responsibleOperatorId) {
+    const operator = await db.select({ id: operators.id }).from(operators).where(and(eq(operators.id, responsibleOperatorId), eq(operators.createdByUserId, userId))).limit(1);
+    if (!operator[0]) throw new Error("Responsável inválido para este espaço de trabalho");
+  }
+  await db.update(tasks).set({ responsibleOperatorId }).where(and(eq(tasks.id, taskId), eq(tasks.createdByUserId, userId)));
 }
 
 export async function listCalendarEvents(userId: number, from?: Date, to?: Date) {

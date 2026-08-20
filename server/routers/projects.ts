@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { createNotification, createProject, getProject, listProjectArtifacts, listProjects, updateProjectStatus } from "../db";
+import { assignProjectResponsible, createNotification, createProject, getProject, listProjectArtifacts, listProjects, updateProjectStatus } from "../db";
 import { protectedProcedure, router } from "../_core/trpc";
 import { getOperationalUserId } from "./helpers";
 
@@ -33,6 +33,12 @@ export const projectsRouter = router({
     .mutation(async ({ ctx, input }) => {
       const userId = await getOperationalUserId(ctx.user);
       await updateProjectStatus(userId, input.projectId, input.status);
+      return { success: true } as const;
+    }),
+  assignResponsible: protectedProcedure
+    .input(z.object({ projectId: z.number().int().positive(), responsibleOperatorId: z.number().int().positive().nullable() }))
+    .mutation(async ({ ctx, input }) => {
+      await assignProjectResponsible(await getOperationalUserId(ctx.user), input.projectId, input.responsibleOperatorId);
       return { success: true } as const;
     }),
 });

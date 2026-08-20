@@ -30,7 +30,14 @@
 - [x] Documentar que a instância atual retorna somente `.gitkeep`, sem artefatos de produção úteis para vínculo.
 - [x] Salvar no projeto um registro verificável da resposta real e da conferência visual da integração publicada.
 - [x] Cadastrar Globo Acabamentos como cliente real e confirmar sua persistência no painel.
-- [ ] Validar explicitamente criar, consultar, atualizar e excluir as entidades operacionais principais, com dados reais autorizados.
+- [x] Validar criação, consulta e atualização do cliente, projeto e tarefa reais autorizados para Globo Acabamentos.
+- [x] Adiar a exclusão dos registros reais por decisão do usuário para uma revisão conjunta futura.
+- [ ] Validar criação, consulta e atualização de equipe, responsável e marco de agenda com dados reais autorizados.
+- [x] Cadastrar Anderson e Patrick como responsáveis reais de Globo Acabamentos.
+- [x] Confirmar no painel a leitura e a atualização dos responsáveis recém-cadastrados.
+- [ ] Obter o nome da equipe e a data/hora do marco de agenda antes de criar esses registros.
+- [x] Implementar a associação protegida de responsável em projetos e tarefas existentes.
+- [x] Vincular Anderson ao projeto e Patrick à tarefa reais de Globo Acabamentos, confirmando a leitura no painel.
 - [x] Testar e documentar os caminhos de erro da interface e dos contratos para URL inválida, backend indisponível, dados inválidos, carregamento e estado vazio.
 - [x] Documentar explicitamente os cenários validados de URL inválida, backend indisponível, dados inválidos, carregamento e estado vazio.
 - [x] Cobrir em teste uma URL malformada no adaptador FastAPI e registrar a evidência de aprovação.
@@ -40,3 +47,5 @@
 - [x] Verificar o remoto GitHub e a autorização de envio da versão atual.
 - [x] Preparar o conjunto de código, documentação e referências para a sincronização com o GitHub.
 - [x] Enviar a versão atual para o repositório GitHub e confirmar o commit remoto.
+- [x] Registrar evidência verificável da interface mostrando Anderson no projeto Globo Acabamentos e Patrick na tarefa correspondente.
+- [x] Adicionar teste de interface para Projetos e Produção cobrindo a exibição do responsável após leitura dos dados vinculados.
