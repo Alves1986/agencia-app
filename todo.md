@@ -78,4 +78,4 @@
 - [x] Adicionar teste de segurança garantindo que listagens e respostas da Agência IA não retornam chaves ou segredos descriptografados.
 - [x] Registrar evidência funcional rastreável de campanha integrada, geração e revisão humana, ou documentar formalmente um bloqueio por credencial ausente.
 - [x] Confirmar e versionar a evidência da Agência IA com cobertura automatizada, ausência de conexões configuradas e bloqueio explícito de geração real sem credencial autorizada.
-- [ ] Sincronizar a documentação de validação da Agência IA no repositório após confirmar sua gravação local.
+- [x] Sincronizar a documentação de validação da Agência IA no repositório após confirmar sua gravação local.
