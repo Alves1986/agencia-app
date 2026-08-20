@@ -1,7 +1,7 @@
 import { trpc } from "@/lib/trpc";
 import { Bell, ChevronDown, LayoutDashboard, ListFilter, Loader2, Plus, SlidersHorizontal, Sparkles, SquareKanban, UsersRound, Workflow } from "lucide-react";
 import { getNotificationTarget } from "@/lib/notificationTarget";
-import { ReactNode, useState } from "react";
+import React, { ReactNode, useState } from "react";
 import { Link, useLocation } from "wouter";
 
 const pulseMark = "/manus-storage/agencia-pulse-mark_5618a4d0.png";
@@ -82,7 +82,7 @@ export function StudioShell({ title, eyebrow, actions, children }: { title: stri
                   <label>Equipe
                     <select value={activeTeam ?? "all-teams"} onChange={event => updatePreferences.mutate({ activeTeamId: event.target.value === "all-teams" ? null : Number(event.target.value) })}>
                       <option value="all-teams">Todas as equipes</option>
-                      {(teams.data ?? []).map(team => <option key={team.id} value={team.id}>{team.name}</option>)}
+                      <TeamFilterOptions teams={teams.data ?? []} />
                     </select>
                   </label>
                   <button type="button" className="ops-text-button" onClick={() => updatePreferences.mutate({ activeClientId: null, activeTeamId: null })}>Limpar filtros</button>
@@ -123,6 +123,10 @@ export function StudioShell({ title, eyebrow, actions, children }: { title: stri
 
 export function NewProjectLink() {
   return <Link href="/projetos?novo=1" className="ops-primary-button"><Plus size={18} /> Novo projeto</Link>;
+}
+
+export function TeamFilterOptions({ teams }: { teams: ReadonlyArray<{ id: number; name: string }> }) {
+  return <>{teams.map(team => <option key={team.id} value={team.id}>{team.name}</option>)}</>;
 }
 
 export function formatDate(value?: Date | string | null, withTime = false) {

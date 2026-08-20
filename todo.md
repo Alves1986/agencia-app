@@ -51,3 +51,7 @@
 - [x] Adicionar teste de interface para Projetos e Produção cobrindo a exibição do responsável após leitura dos dados vinculados.
 - [x] Corrigir a configuração de implantação Vercel para detectar o painel React/Node, e não o backend FastAPI legado.
 - [x] Validar o build de produção e sincronizar a correção na branch de revisão do GitHub.
+- [x] Criar a equipe real Vertex com os dados autorizados pelo usuário.
+- [x] Confirmar a persistência e a leitura da equipe Vertex no painel operacional.
+- [ ] Confirmar visualmente no painel operacional que a equipe Vertex aparece nas listas ou filtros carregados do workspace.
+- [x] Adicionar teste verificável de interface ou evidência equivalente para a leitura da equipe Vertex no painel.
