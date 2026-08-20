@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agencia de Anuncios — AI Local</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <!-- Sidebar -->
+        <aside id="sidebar">
+            <div class="sidebar-header">
+                <h1>Agencia AI</h1>
+                <span class="badge">Local</span>
+            </div>
+
+            <div class="sidebar-section">
+                <h3>Modulos</h3>
+                <button class="module-btn active" data-skill="agencia" onclick="selectSkill('agencia')">
+                    <span class="icon">Megafone</span>
+                    <div>
+                        <strong>Agencia de Anuncios</strong>
+                        <small>7 etapas completas</small>
+                    </div>
+                </button>
+                <button class="module-btn" data-skill="carrosseis" onclick="selectSkill('carrosseis')">
+                    <span class="icon">Imagens</span>
+                    <div>
+                        <strong>Maquina de Carrosseis</strong>
+                        <small>Instagram 1080x1350</small>
+                    </div>
+                </button>
+            </div>
+
+            <div class="sidebar-section">
+                <h3>Arquivos Salvos</h3>
+                <div id="files-list" class="files-list">
+                    <small class="empty">Nenhum arquivo ainda</small>
+                </div>
+            </div>
+
+            <div class="sidebar-footer">
+                <button class="config-btn" onclick="openConfig()">Configuracao</button>
+                <div id="provider-status" class="provider-status">
+                    <span class="dot offline"></span>
+                    <span>Na configurado</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Chat -->
+        <main id="main">
+            <div class="chat-header">
+                <h2 id="chat-title">Agencia de Anuncios</h2>
+                <span id="chat-subtitle" class="subtitle">7 etapas de campanha completa</span>
+            </div>
+
+            <div id="chat-messages" class="chat-messages">
+                <div class="welcome-message">
+                    <div class="welcome-icon">Megafone</div>
+                    <h2>Agencia de Anuncios com AI</h2>
+                    <p>Selecione um modulo ao lado e comece a criar suas campanhas. Tudo roda localmente — seus dados nunca saem do seu computador.</p>
+                    <div class="welcome-tips">
+                        <div class="tip">
+                            <strong>1. Configure sua API key</strong>
+                            <span>Escolha seu provedor de AI e cole sua chave</span>
+                        </div>
+                        <div class="tip">
+                            <strong>2. Escolha o modulo</strong>
+                            <span>Agencia (7 etapas) ou Carrosseis (Instagram)</span>
+                        </div>
+                        <div class="tip">
+                            <strong>3. Responda as perguntas</strong>
+                            <span>A AI conduz, voce so responde</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-input-area">
+                <div class="input-wrapper">
+                    <textarea id="chat-input" placeholder="Digite sua mensagem..." rows="1" onkeydown="handleKeydown(event)"></textarea>
+                    <button id="send-btn" onclick="sendMessage()" disabled>
+                        <span>Enviar</span>
+                    </button>
+                </div>
+                <div class="input-footer">
+                    <span>Enter para enviar · Shift+Enter para nova linha</span>
+                    <span id="char-count">0</span>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Config Modal -->
+    <div id="config-modal" class="modal" onclick="closeConfig(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h2>Configuracao</h2>
+                <button class="close-btn" onclick="closeConfig()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Provedor de AI</label>
+                    <select id="cfg-provider" onchange="updateModels()">
+                        <option value="">Selecione...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Modelo</label>
+                    <select id="cfg-model">
+                        <option value="">Modelo padrao do provedor</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>API Key</label>
+                    <div class="key-input-wrapper">
+                        <input type="password" id="cfg-key" placeholder="Cole sua API key aqui...">
+                        <button class="toggle-key" onclick="toggleKeyVisibility()">Mostrar</button>
+                    </div>
+                    <small>Sua key fica salva apenas neste computador. Nunca e enviada pra nuvem.</small>
+                </div>
+                <div class="form-actions">
+                    <button class="btn-secondary" onclick="closeConfig()">Cancelar</button>
+                    <button class="btn-primary" onclick="saveConfig()">Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
